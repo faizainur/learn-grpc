@@ -1,9 +1,8 @@
 syntax = "proto3";
 package AddressBook;
 
-import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/faizainur/learn-grpc/go-addressbook/addressbook_pb";
+option go_package = "./addressbook_pbv2";
 
 message Person {
     string name = 1;
@@ -22,7 +21,6 @@ message Person {
     }
 
     repeated PhoneNumber phones = 4;
-    google.protobuf.Timestamp last_updated = 5;
 }
 
 message AddressBook {

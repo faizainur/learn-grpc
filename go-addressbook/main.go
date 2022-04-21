@@ -2,12 +2,16 @@ package main
 
 import (
 	fmt "fmt"
+	"log"
+
+	"io/ioutil"
 
 	pb "github.com/faizainur/learn-grpc/go-addressbook/addressbook_pb"
+	"google.golang.org/protobuf/proto"
 )
 
 func main() {
-	p := pb.Person{
+	person := &pb.Person{
 		Id:    1234,
 		Name:  "John Doe",
 		Email: "jogn@doe.com",
@@ -16,5 +20,15 @@ func main() {
 		},
 	}
 
-	fmt.Println(p.String())
+	serializedPerson, err := proto.Marshal(person)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = ioutil.WriteFile("test_pb.txt", serializedPerson, 0644)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Println(person.String())
+	fmt.Println("Success")
 }
