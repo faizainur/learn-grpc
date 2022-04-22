@@ -4,6 +4,17 @@ package AddressBook;
 
 option go_package = "./addressbook_pbv2";
 
+service AddressBookService {
+    rpc GetPerson (void) returns (Person) {}
+    rpc SayHelloWorld (void) returns (StringResponse){}
+}
+
+message void{}
+
+message StringResponse {
+    string message = 1;
+}
+
 message Person {
     string name = 1;
     int32 id = 2;
