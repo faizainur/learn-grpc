@@ -3,32 +3,23 @@ package main
 import (
 	fmt "fmt"
 	"log"
+	"net"
 
-	"io/ioutil"
+	grpc "google.golang.org/grpc"
 
-	pb "github.com/faizainur/learn-grpc/go-addressbook/addressbook_pb"
-	"google.golang.org/protobuf/proto"
+	"github.com/faizainur/learn-grpc/go-addressbook/addressbook"
 )
 
 func main() {
-	person := &pb.Person{
-		Id:    1234,
-		Name:  "John Doe",
-		Email: "jogn@doe.com",
-		Phones: []*pb.Person_PhoneNumber{
-			{Number: "123123", Type: pb.Person_HOME},
-		},
+	tcpServer, err := net.Listen("tcp", ":9999")
+	if err != nil {
+		fmt.Errorf("Error : %q", err.Error())
+	}
+	s := grpc.NewServer()
+	addressbook.RegisterGrpcServer(s, &addressbook.Server{})
+	log.Printf("server listening at %v", tcpServer.Addr())
+	if err := s.Serve(tcpServer); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 
-	serializedPerson, err := proto.Marshal(person)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = ioutil.WriteFile("test_pb.txt", serializedPerson, 0644)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	fmt.Println(person.String())
-	fmt.Println("Success")
 }
